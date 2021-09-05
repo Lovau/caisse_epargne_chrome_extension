@@ -1,0 +1,29 @@
+{
+  "manifest_version": 2,
+  "name": "Télécharger mes relevés Caisse d'épargne",
+  "version": "1.0",
+  "description": "Permets le téléchargement d'un fichier CSV des relevés de comptes Caisse d'épargne.",
+  "page_action": {
+    "default_title": "Télécharger mes relevés Caisse d'épargne",
+    "default_icon": "CAISSEEPARGNE.png"
+  },
+  "icons": { 
+    "16": "CAISSEEPARGNE.png",
+    "48": "CAISSEEPARGNE.png", 
+    "128": "CAISSEEPARGNE.png" 
+  },
+  "background": {
+    "scripts": ["main.js"],
+    "persistant" : false
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.net751.caisse-epargne.fr/*"],
+      "js": ["jquery-2.min.js", "data_to_csv.js", "add_button.js"]
+    }
+  ],
+  "permissions": [
+      "activeTab",
+      "declarativeContent"
+  ]
+}
