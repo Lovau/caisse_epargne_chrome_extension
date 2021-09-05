@@ -3,6 +3,7 @@ Permets à un client de Caisse d'épargne, quand il est connecté à son compte 
 Aucune information n'est stockée par l'extension, aucune donnée n'est transmise.
 
 Le fonctionnement de cette extension est simple : 
-- Vérifier l'URL pour détecter une page caisse d'épargne (ie : https://www.net751.caisse-epargne.fr/ )
-- Formatter en CSV le tableau de relevés affiché
+- Vérifie si la page affichée est une page d'historique de compte
+- Récupère l'historique affiché et, pour chaque ligne, ouvre la popup de détails pour récupérer un peu plus de détails sur l'opération.
+- Formatte en CSV l'historique récupéré et télécharge le fichier correspondant.
 
