@@ -43,7 +43,7 @@ function waitForElementToExist(selector, callback) {
   } else {
     setTimeout(function() {
       waitForElementToExist(selector, callback);
-    }, 100);
+    }, 50);
   }
 };
 
@@ -89,18 +89,43 @@ async function getLabelDetails(rows) {
                 var detailLabel = "";
                 var detailLabelElement,detailLabelElement2,detailLabelElement3 = null;
                 
-                detailLabelElement = $("div.scrollPane td:contains(Référence du donneur d'ordre) ~ td:first");
-                detailLabelElement2 = $("div.scrollPane td:contains(Information associée à l'opération) ~ td:first");
-                detailLabelElement3 = $("div.scrollPane td:contains(Libellé de l'opération) ~ td:first");
+                // each TR contains 2 TD
+                if ($("div.scrollPane table tbody tr:first-child td").length == 2) {
+                    detailLabelElement = $("div.scrollPane td:contains(Référence du donneur d'ordre) ~ td:first");
+                    detailLabelElement2 = $("div.scrollPane td:contains(Information associée à l'opération) ~ td:first");
+                    detailLabelElement3 = $("div.scrollPane td:contains(Libellé de l'opération) ~ td:first");
 
-                if (detailLabelElement.length > 0 && detailLabelElement.text().length > 0 && detailLabelElement.text() !== "NOTPROVIDED") {
-                    detailLabel = detailLabelElement.text();
-                } else if (detailLabelElement2.length > 0) {
-                    detailLabel = detailLabelElement2.text();
-                } else if (detailLabelElement3.length > 0) {
-                    detailLabel = detailLabelElement3.text();
+                    if (detailLabelElement.length > 0 && detailLabelElement.text().length > 0 && detailLabelElement.text() !== "NOTPROVIDED") {
+                        detailLabel = detailLabelElement.text();
+                    } else if (detailLabelElement2.length > 0) {
+                        detailLabel = detailLabelElement2.text();
+                    } else if (detailLabelElement3.length > 0) {
+                        detailLabel = detailLabelElement3.text();
+                    }
+                } 
+                // each TR contains 1 TD
+                else if ($("div.scrollPane table tbody tr:first-child td").length == 1) {
+                    detailLabelElement = $("div.scrollPane td:contains(Référence du donneur d'ordre)").text().replace("Référence du donneur d'ordre", "");
+                    detailLabelElement2 = $("div.scrollPane td:contains(Information associée à l'opération)").text().replace("Information associée à l'opération", "");
+                    detailLabelElement3 = $("div.scrollPane td:contains(Libellé de l'opération)").text().replace("Libellé de l'opération", "");
+
+                    console.log("DEBUG", detailLabelElement, detailLabelElement2, detailLabelElement3);
+
+                    if (detailLabelElement.length > 0 && detailLabelElement !== "NOTPROVIDED") {
+                        detailLabel = detailLabelElement;
+                    } else if (detailLabelElement2.length > 0) {
+                        detailLabel = detailLabelElement2;
+                    } else if (detailLabelElement3.length > 0) {
+                        detailLabel = detailLabelElement3;
+                    } else {
+                    }
+                    console.log("detailLabel "+i, detailLabel);
+
+                    detailLabel = detailLabel.replace(" : ", "");
                 } else {
+                    console.log("EERROOORRRR");
                 }
+
                 console.log("detailLabel "+i, detailLabel);
 
                 resolve(detailLabel);
