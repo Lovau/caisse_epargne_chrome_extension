@@ -18,8 +18,8 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://www.net751.caisse-epargne.fr/*"],
-      "js": ["jquery-2.min.js", "data_to_csv.js", "add_button.js"]
+      "matches": ["https://www.caisse-epargne.fr/espace-client/compte/avance/detail"],
+      "js": ["jquery-2.min.js", "data_to_csv.js"]
     }
   ],
   "permissions": [

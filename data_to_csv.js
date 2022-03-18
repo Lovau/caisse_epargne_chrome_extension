@@ -251,9 +251,42 @@ function exportCSVFile(headers, items, fileTitle) {
 
 async function startCSVDownload(e) {
 
-    // Get data
-    var table = $('table[summary=summary]');
-    var data = await getTableInJSON(table);
+    var items = $("compte-transaction-item");
+    var label,date,montant,date2, month;
+    var data = [];
+    for (var i = 0; i < items.length; i++) {
+
+        label = $(items[i]).find("div > div.label").text().trim();
+        date = $(items[i]).find("div > div.date.ng-star-inserted").text().split('-')[0].trim();
+        date2 = Date.parse(date).toString();
+        // remove unecessary 3 last 0 - why ?!
+        // date2 = date2.substring(0, date2.length - 2);
+        // now timestamp is correct - re-convert to Date
+        date2 = new Date(parseInt(date2));
+        montant = $(items[i]).find("div > compte-balance > span").text().replace("€", '').replace(/\s/g,'').trim();
+
+        items[i].click();
+        label += " / " + $("compte-transaction-layer ui-cell:nth-child(1) > div > div > div > span").text().replace(/\s\s+/g, ' ').trim();
+
+        month = date2.getMonth()+1;
+        if (month < 10) {
+            month = "0"+month.toString();
+        }
+
+        console.log("DEBUG", {
+            date1: date,
+            date2: date2.getFullYear()+"-"+month+"-"+date2.getDate(),
+            montant: montant,
+            label: label,
+        })
+
+        data.push({
+            date: date2.getFullYear()+"-"+month+"-"+date2.getDate(),
+            montant: montant,
+            label: label,
+        });
+    }
+
     var csv = convertToCSV(data);
     // console.log(csv);
 
