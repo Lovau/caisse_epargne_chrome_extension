@@ -252,36 +252,56 @@ function exportCSVFile(headers, items, fileTitle) {
 async function startCSVDownload(e) {
 
     var items = $("compte-transaction-item");
-    var label,date,montant,date2, month;
+    var label,date,montant,date2, month, dateParts, fullDate;
     var data = [];
+    const months = [
+        "jan",
+        "fév",
+        "mar",
+        "avr",
+        "mai",
+        "juin",
+        "juil",
+        "août",
+        "sept",
+        "oct",
+        "nov",
+        "déc",
+    ];
     for (var i = 0; i < items.length; i++) {
 
         label = $(items[i]).find("div > div.label").text().trim();
         date = $(items[i]).find("div > div.date.ng-star-inserted").text().split('-')[0].trim();
-        date2 = Date.parse(date).toString();
-        // remove unecessary 3 last 0 - why ?!
-        // date2 = date2.substring(0, date2.length - 2);
-        // now timestamp is correct - re-convert to Date
-        date2 = new Date(parseInt(date2));
+
+        dateParts = date.split(" ");
+
+        console.log("Date", dateParts[1].trim());
+        for (var j = 0; j < months.length; j++) {
+            if (dateParts[1].trim().startsWith(months[j])) {
+                break;
+            }
+        }
+        month = j+1;
+        if (month < 10) {
+            month = "0"+month.toString();
+        }
+        fullDate = dateParts[2] + "-" + month + "-" + dateParts[0];
+
         montant = $(items[i]).find("div > compte-balance > span").text().replace("€", '').replace(/\s/g,'').trim();
 
         items[i].click();
         label += " / " + $("compte-transaction-layer ui-cell:nth-child(1) > div > div > div > span").text().replace(/\s\s+/g, ' ').trim();
 
-        month = date2.getMonth()+1;
-        if (month < 10) {
-            month = "0"+month.toString();
-        }
 
         console.log("DEBUG", {
             date1: date,
-            date2: date2.getFullYear()+"-"+month+"-"+date2.getDate(),
+            date2: fullDate,
             montant: montant,
             label: label,
         })
 
         data.push({
-            date: date2.getFullYear()+"-"+month+"-"+date2.getDate(),
+            date: fullDate,
             montant: montant,
             label: label,
         });
