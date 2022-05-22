@@ -271,11 +271,11 @@ async function startCSVDownload(e) {
     for (var i = 0; i < items.length; i++) {
 
         label = $(items[i]).find("div > div.label").text().trim();
-        date = $(items[i]).find("div > div.date.ng-star-inserted").text().split('-')[0].trim();
+        date = $(items[i]).find(".date").text().split('-')[0].trim();
 
         dateParts = date.split(" ");
 
-        console.log("Date", dateParts[1].trim());
+        // console.log("item, label, Date", items[i], label, $(items[i]).find(".date").text());
         for (var j = 0; j < months.length; j++) {
             if (dateParts[1].trim().startsWith(months[j])) {
                 break;
