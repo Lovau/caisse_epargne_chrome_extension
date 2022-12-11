@@ -251,8 +251,8 @@ function exportCSVFile(headers, items, fileTitle) {
 
 async function startCSVDownload(e) {
 
-    var items = $("compte-transaction-item");
-    var label,date,montant,date2, month, dateParts, fullDate;
+    var items = $("compte-transaction-item-advanced");
+    var label, labelDetail, date,montant,date2, month, dateParts, fullDate;
     var data = [];
     const months = [
         "jan",
@@ -290,14 +290,15 @@ async function startCSVDownload(e) {
         montant = $(items[i]).find("div > compte-balance > span").text().replace("€", '').replace(/\s/g,'').trim();
 
         items[i].click();
-        label += " / " + $("compte-transaction-layer ui-cell:nth-child(1) > div > div > div > span").text().replace(/\s\s+/g, ' ').trim();
-
+        labelDetail = $("compte-transaction-layer ui-cell:nth-child(1) > div > div > div").text().replace(/\s\s+/g, ' ').trim();
+        label += " / " + labelDetail;
 
         console.log("DEBUG", {
             date1: date,
             date2: fullDate,
             montant: montant,
             label: label,
+            labelDetail: labelDetail,
         })
 
         data.push({
