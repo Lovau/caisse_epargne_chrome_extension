@@ -109,7 +109,7 @@ async function getLabelDetails(rows) {
                     detailLabelElement2 = $("div.scrollPane td:contains(Information associée à l'opération)").text().replace("Information associée à l'opération", "");
                     detailLabelElement3 = $("div.scrollPane td:contains(Libellé de l'opération)").text().replace("Libellé de l'opération", "");
 
-                    console.log("DEBUG", detailLabelElement, detailLabelElement2, detailLabelElement3);
+                    console.log("DEBUG--", detailLabelElement, detailLabelElement2, detailLabelElement3);
 
                     if (detailLabelElement.length > 0 && detailLabelElement !== "NOTPROVIDED") {
                         detailLabel = detailLabelElement;
@@ -290,7 +290,8 @@ async function startCSVDownload(e) {
         montant = $(items[i]).find("div > compte-balance > span").text().replace("€", '').replace(/\s/g,'').trim();
 
         items[i].click();
-        labelDetail = $("compte-transaction-layer ui-cell:nth-child(1) > div > div > div").text().replace(/\s\s+/g, ' ').trim();
+        labelDetail = $("compte-transaction-layer ui-cell:nth-child(1) > div > div > div:nth-child(2)").text().replace(/\s\s+/g, ' ').trim();
+        console.log("COUCOU labelDetail", $("compte-transaction-layer ui-cell:nth-child(1) > div > div > div:nth-child(2)"));
         label += " / " + labelDetail;
 
         console.log("DEBUG", {
