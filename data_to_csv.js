@@ -1,28 +1,27 @@
 function dynamicSortByDate(property) {
-
-    return function (a,b) {
+    return function (a, b) {
         // return b[property].localeCompare(a[property]);
         return a[property].localeCompare(b[property]);
-    }
+    };
 }
 
 function formatLabel(label) {
-    var result = $(label.trim()).text().trim().replace(/\s+/g,' ');
+    var result = $(label.trim()).text().trim().replace(/\s+/g, " ");
     return result.replace(/(<([^>]+)>)/gi, "");
 }
 
 function formatMontant(montant) {
-    montant = montant.replace('+', '');
-    montant = montant.replace(/&nbsp;/g, '');
-    montant = montant.replace(/€/g, '');
-    montant = montant.replace(/ /g, '');
+    montant = montant.replace("+", "");
+    montant = montant.replace(/&nbsp;/g, "");
+    montant = montant.replace(/€/g, "");
+    montant = montant.replace(/ /g, "");
     return montant;
 }
 
 function openPopup(JS) {
-    var yourCustomJavaScriptCode = '...';
-    var script = document.createElement('script');
-    var code = document.createTextNode('(function() {' + JS + '})();');
+    var yourCustomJavaScriptCode = "...";
+    var script = document.createElement("script");
+    var code = document.createTextNode("(function() {" + JS + "})();");
     script.appendChild(code);
     (document.body || document.head).appendChild(script);
 }
@@ -32,20 +31,20 @@ async function closePopup() {
 }
 
 async function wait(ms) {
-    await new Promise(function(res, reject) {
+    await new Promise(function (res, reject) {
         setTimeout(res, ms);
     });
 }
 
 function waitForElementToExist(selector, callback) {
-  if (jQuery(selector).length) {
-    callback();
-  } else {
-    setTimeout(function() {
-      waitForElementToExist(selector, callback);
-    }, 50);
-  }
-};
+    if (jQuery(selector).length) {
+        callback();
+    } else {
+        setTimeout(function () {
+            waitForElementToExist(selector, callback);
+        }, 50);
+    }
+}
 
 async function getLabelDetails(rows) {
     var date;
@@ -65,9 +64,10 @@ async function getLabelDetails(rows) {
         montant = 0;
         row = [];
 
-        date = rows[i][0].substr(6,4) + "-" + rows[i][0].substr(3,2) + "-" + rows[i][0].substr(0,2);
+        date =
+            rows[i][0].substr(6, 4) + "-" + rows[i][0].substr(3, 2) + "-" + rows[i][0].substr(0, 2);
         label = $("<div>").html(rows[i][1]).text();
-        labelJS = $(rows[i][1]).attr("href").replace('javascript:', '');
+        labelJS = $(rows[i][1]).attr("href").replace("javascript:", "");
         debit = $.trim(rows[i][2]);
         credit = $.trim(rows[i][3]);
 
@@ -80,36 +80,62 @@ async function getLabelDetails(rows) {
         }
 
         openPopup(labelJS);
-        console.log("Opening popup "+i);
+        console.log("Opening popup " + i);
         await wait(1200);
 
-        await new Promise(function(resolve, reject) {
-
-            waitForElementToExist("div.scrollPane table:visible", function(){
+        await new Promise(function (resolve, reject) {
+            waitForElementToExist("div.scrollPane table:visible", function () {
                 var detailLabel = "";
-                var detailLabelElement,detailLabelElement2,detailLabelElement3 = null;
-                
+                var detailLabelElement,
+                    detailLabelElement2,
+                    detailLabelElement3 = null;
+
                 // each TR contains 2 TD
                 if ($("div.scrollPane table tbody tr:first-child td").length == 2) {
-                    detailLabelElement = $("div.scrollPane td:contains(Référence du donneur d'ordre) ~ td:first");
-                    detailLabelElement2 = $("div.scrollPane td:contains(Information associée à l'opération) ~ td:first");
-                    detailLabelElement3 = $("div.scrollPane td:contains(Libellé de l'opération) ~ td:first");
+                    detailLabelElement = $(
+                        "div.scrollPane td:contains(Référence du donneur d'ordre) ~ td:first",
+                    );
+                    detailLabelElement2 = $(
+                        "div.scrollPane td:contains(Information associée à l'opération) ~ td:first",
+                    );
+                    detailLabelElement3 = $(
+                        "div.scrollPane td:contains(Libellé de l'opération) ~ td:first",
+                    );
 
-                    if (detailLabelElement.length > 0 && detailLabelElement.text().length > 0 && detailLabelElement.text() !== "NOTPROVIDED") {
+                    if (
+                        detailLabelElement.length > 0 &&
+                        detailLabelElement.text().length > 0 &&
+                        detailLabelElement.text() !== "NOTPROVIDED"
+                    ) {
                         detailLabel = detailLabelElement.text();
                     } else if (detailLabelElement2.length > 0) {
                         detailLabel = detailLabelElement2.text();
                     } else if (detailLabelElement3.length > 0) {
                         detailLabel = detailLabelElement3.text();
                     }
-                } 
+                }
                 // each TR contains 1 TD
                 else if ($("div.scrollPane table tbody tr:first-child td").length == 1) {
-                    detailLabelElement = $("div.scrollPane td:contains(Référence du donneur d'ordre)").text().replace("Référence du donneur d'ordre", "");
-                    detailLabelElement2 = $("div.scrollPane td:contains(Information associée à l'opération)").text().replace("Information associée à l'opération", "");
-                    detailLabelElement3 = $("div.scrollPane td:contains(Libellé de l'opération)").text().replace("Libellé de l'opération", "");
+                    detailLabelElement = $(
+                        "div.scrollPane td:contains(Référence du donneur d'ordre)",
+                    )
+                        .text()
+                        .replace("Référence du donneur d'ordre", "");
+                    detailLabelElement2 = $(
+                        "div.scrollPane td:contains(Information associée à l'opération)",
+                    )
+                        .text()
+                        .replace("Information associée à l'opération", "");
+                    detailLabelElement3 = $("div.scrollPane td:contains(Libellé de l'opération)")
+                        .text()
+                        .replace("Libellé de l'opération", "");
 
-                    console.log("DEBUG--", detailLabelElement, detailLabelElement2, detailLabelElement3);
+                    console.log(
+                        "DEBUG--",
+                        detailLabelElement,
+                        detailLabelElement2,
+                        detailLabelElement3,
+                    );
 
                     if (detailLabelElement.length > 0 && detailLabelElement !== "NOTPROVIDED") {
                         detailLabel = detailLabelElement;
@@ -119,31 +145,32 @@ async function getLabelDetails(rows) {
                         detailLabel = detailLabelElement3;
                     } else {
                     }
-                    console.log("detailLabel "+i, detailLabel);
+                    console.log("detailLabel " + i, detailLabel);
 
                     detailLabel = detailLabel.replace(" : ", "");
                 } else {
                     console.log("EERROOORRRR");
                 }
 
-                console.log("detailLabel "+i, detailLabel);
+                console.log("detailLabel " + i, detailLabel);
 
                 resolve(detailLabel);
             });
         })
-        .then(function(additionalLabel) {
-            if (additionalLabel.length > 0) {
-                label += " / " + additionalLabel;
-            }
-        }).then(function() {
-            console.log("RESULT", date, montant, label);
-            data.push([date, montant, label]);
-            closePopup();
+            .then(function (additionalLabel) {
+                if (additionalLabel.length > 0) {
+                    label += " / " + additionalLabel;
+                }
+            })
+            .then(function () {
+                console.log("RESULT", date, montant, label);
+                data.push([date, montant, label]);
+                closePopup();
 
-            // return new Promise((resolve, reject) => {
-            //     setTimeout(() => resolve(), 1000);
-            // });
-        });
+                // return new Promise((resolve, reject) => {
+                //     setTimeout(() => resolve(), 1000);
+                // });
+            });
     }
 
     data.sort(dynamicSortByDate("0"));
@@ -151,29 +178,33 @@ async function getLabelDetails(rows) {
     return data;
 }
 
-
 /**
- * Convert an HTML table into javascript array 
- * 
+ * Convert an HTML table into javascript array
+ *
  * @param  table DOM
  * @param  isLivret Are we on account page or livret ?
  * @return array
  */
 async function getTableInJSON(table) {
-
-    var delay = ( function() {
+    var delay = (function () {
         var timer = 0;
-        return function(callback, ms) {
-            clearTimeout (timer);
+        return function (callback, ms) {
+            clearTimeout(timer);
             timer = setTimeout(callback, ms);
         };
     })();
 
-    var trs = table.find('tr').get().map(function(row) {
-      return $(row).find('td,th').get().map(function(cell) {
-        return $(cell).html();
-      });
-    });
+    var trs = table
+        .find("tr")
+        .get()
+        .map(function (row) {
+            return $(row)
+                .find("td,th")
+                .get()
+                .map(function (cell) {
+                    return $(cell).html();
+                });
+        });
 
     trs.shift();
     console.log(trs);
@@ -185,25 +216,25 @@ async function getTableInJSON(table) {
 
 /**
  * Convert a javascript array into CSV string
- * 
+ *
  * @param  JSON
  * @return a CSV string
  */
-function convertToCSV(objArray, separator = ';') {
-    var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
-    var str = '';
+function convertToCSV(objArray, separator = ";") {
+    var array = typeof objArray != "object" ? JSON.parse(objArray) : objArray;
+    var str = "";
 
     for (var i = 0; i < array.length; i++) {
-        var line = '';
+        var line = "";
         for (var index in array[i]) {
-            if (line != '') {
-                line += separator
+            if (line != "") {
+                line += separator;
             }
 
             line += '"' + array[i][index] + '"';
         }
 
-        str += line + '\r\n';
+        str += line + "\r\n";
     }
 
     return str;
@@ -212,7 +243,7 @@ function convertToCSV(objArray, separator = ';') {
 /**
  * Create a CSV file based on headers and Array of data.
  * Then download the file from browser.
- * 
+ *
  * @param  headers      Array
  * @param  items        Array
  * @param  fileTitle    String
@@ -227,20 +258,27 @@ function exportCSVFile(headers, items, fileTitle) {
 
     var csv = this.convertToCSV(jsonObject);
 
-    var exportedFileName = fileTitle + '.csv' || 'export.csv';
+    var exportedFileName = fileTitle + ".csv" || "export.csv";
 
-    var blob = new Blob([new Uint8Array([0xEF, 0xBB, 0xBF]), // UTF-8 BOM
-        csv], { type: 'text/csv;charset=utf-8;' });
-    if (navigator.msSaveBlob) { // IE 10+
+    var blob = new Blob(
+        [
+            new Uint8Array([0xef, 0xbb, 0xbf]), // UTF-8 BOM
+            csv,
+        ],
+        { type: "text/csv;charset=utf-8;" },
+    );
+    if (navigator.msSaveBlob) {
+        // IE 10+
         navigator.msSaveBlob(blob, exportedFileName);
     } else {
         var link = document.createElement("a");
-        if (link.download !== undefined) { // feature detection
+        if (link.download !== undefined) {
+            // feature detection
             // Browsers that support HTML5 download attribute
             var url = URL.createObjectURL(blob);
             link.setAttribute("href", url);
             link.setAttribute("download", exportedFileName);
-            link.style.visibility = 'hidden';
+            link.style.visibility = "hidden";
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -248,11 +286,12 @@ function exportCSVFile(headers, items, fileTitle) {
     }
 }
 
-
 async function startCSVDownload(e) {
-
-    var items = $("compte-transaction-item-advanced");
-    var label, labelDetail, date,montant,date2, month, dateParts, fullDate;
+    console.log("START caisse epargne comptes retrieval");
+    // type of HTML tag for a given line container
+    var items = $("compte-transaction-item");
+    console.log("items", items);
+    var label, labelDetail, date, montant, date2, month, dateParts, fullDate;
     var data = [];
     const months = [
         "jan",
@@ -269,9 +308,10 @@ async function startCSVDownload(e) {
         "déc",
     ];
     for (var i = 0; i < items.length; i++) {
+        label = $(items[i]).find("compte-highlight").first().text().trim();
+        date = $(items[i]).find(".date-location").text().split("-")[0].trim();
 
-        label = $(items[i]).find("div > div.label").text().trim();
-        date = $(items[i]).find(".date").text().split('-')[0].trim();
+        console.log("label", label, "date", date);
 
         dateParts = date.split(" ");
 
@@ -281,17 +321,21 @@ async function startCSVDownload(e) {
                 break;
             }
         }
-        month = j+1;
+        month = j + 1;
         if (month < 10) {
-            month = "0"+month.toString();
+            month = "0" + month.toString();
         }
         fullDate = dateParts[2] + "-" + month + "-" + dateParts[0];
 
-        montant = $(items[i]).find("div > compte-balance > span").text().replace("€", '').replace(/\s/g,'').trim();
+        montant = $(items[i])
+            .find("compte-balance")
+            .text()
+            .replace("€", "")
+            .replace(/\s/g, "")
+            .trim();
 
         items[i].click();
-        labelDetail = $("compte-transaction-layer ui-cell:nth-child(1) > div > div > div:nth-child(2)").text().replace(/\s\s+/g, ' ').trim();
-        console.log("COUCOU labelDetail", $("compte-transaction-layer ui-cell:nth-child(1) > div > div > div:nth-child(2)"));
+        labelDetail = $("compte-layer-item:first div.value").text().replace(/\s\s+/g, " ").trim();
         label += " / " + labelDetail;
 
         console.log("DEBUG", {
@@ -300,7 +344,7 @@ async function startCSVDownload(e) {
             montant: montant,
             label: label,
             labelDetail: labelDetail,
-        })
+        });
 
         data.push({
             date: fullDate,
@@ -312,10 +356,10 @@ async function startCSVDownload(e) {
     var csv = convertToCSV(data);
     // console.log(csv);
 
-    var headers = ['date', 'montant', 'libelle'];
+    var headers = ["date", "montant", "libelle"];
 
     var today = new Date();
-    var filename = 'releves_compte_';
+    var filename = "releves_compte_";
     filename += today.toISOString().substring(0, 10);
 
     // e.stopPropagation();
