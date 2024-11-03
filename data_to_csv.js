@@ -289,7 +289,8 @@ function exportCSVFile(headers, items, fileTitle) {
 async function startCSVDownload(e) {
     console.log("START caisse epargne comptes retrieval");
     // type of HTML tag for a given line container
-    var items = $("compte-transaction-item");
+    // var items = $("compte-transaction-item");
+    var items = $("compte-ui-transaction-item");
     console.log("items", items);
     var label, labelDetail, date, montant, date2, month, dateParts, fullDate;
     var data = [];
@@ -308,7 +309,8 @@ async function startCSVDownload(e) {
         "déc",
     ];
     for (var i = 0; i < items.length; i++) {
-        label = $(items[i]).find("compte-highlight").first().text().trim();
+        // label = $(items[i]).find("compte-highlight").first().text().trim();
+        label = $(items[i]).find("compte-ui-highlight").first().text().trim();
         date = $(items[i]).find(".date-location").text().split("-")[0].trim();
 
         console.log("label", label, "date", date);
@@ -328,7 +330,8 @@ async function startCSVDownload(e) {
         fullDate = dateParts[2] + "-" + month + "-" + dateParts[0];
 
         montant = $(items[i])
-            .find("compte-balance")
+            // .find("compte-balance")
+            .find("compte-ui-balance")
             .text()
             .replace("€", "")
             .replace(/\s/g, "")
