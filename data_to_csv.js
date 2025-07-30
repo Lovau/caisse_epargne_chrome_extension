@@ -337,10 +337,45 @@ async function startCSVDownload(e) {
             .replace(/\s/g, "")
             .trim();
 
-        items[i].click();
-        labelDetail = $("compte-layer-item:first div.value").text().replace(/\s\s+/g, " ").trim();
-        label += " / " + labelDetail;
+        // items[i].click();
+        // items[i].addEventListener("click", (e) => {
+        //     console.log("Événement cliqué:", e);
+        // });
 
+        // if (items[i]) {
+        //     const pointerDownEvent = new PointerEvent("pointerdown", {
+        //         bubbles: true,
+        //         cancelable: true,
+        //         pointerId: 1,
+        //         pointerType: "mouse", // Peut être "mouse", "pen", ou "touch"
+        //         isPrimary: true,
+        //     });
+
+        //     const pointerUpEvent = new PointerEvent("pointerup", {
+        //         bubbles: true,
+        //         cancelable: true,
+        //         pointerId: 1,
+        //         pointerType: "mouse",
+        //         isPrimary: true,
+        //     });
+
+        //     items[i].dispatchEvent(pointerDownEvent);
+        //     items[i].dispatchEvent(pointerUpEvent);
+
+        //     // Facultatif : Émettre un événement "click" si nécessaire
+        //     const clickEvent = new MouseEvent("click", {
+        //         bubbles: true,
+        //         cancelable: true,
+        //         view: window,
+        //     });
+        //     items[i].dispatchEvent(clickEvent);
+
+        //     labelDetail = $("compte-layer-item:first div.value")
+        //         .text()
+        //         .replace(/\s\s+/g, " ")
+        //         .trim();
+        //     label += " / " + labelDetail;
+        // }
         console.log("DEBUG", {
             date1: date,
             date2: fullDate,
@@ -348,6 +383,7 @@ async function startCSVDownload(e) {
             label: label,
             labelDetail: labelDetail,
         });
+        // break;
 
         data.push({
             date: fullDate,
